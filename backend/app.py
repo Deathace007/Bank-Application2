@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, session, redirect, url_for, flash
+from flask import Flask, jsonify, request, session, redirect, url_for, flash, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_cors import CORS
@@ -26,6 +26,10 @@ class User(db.Model, UserMixin):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+@app.route('/')
+def home():
+    return render_template('index.html')
+
 @app.route('/api/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -38,7 +42,7 @@ def register():
     db.session.commit()
     return jsonify({'message': 'User registered successfully'}), 201
 
-@app.route('/api/login', methods=['POST'])
+@app.route('/api/login', methods=['POST', 'GET'])
 def login():
     data = request.get_json()
     email = data.get('email')
@@ -68,6 +72,7 @@ def dashboard():
     return jsonify(user_data), 200
 
 if __name__ == '__main__':
-    if not os.path.exists('users.db'):
-        db.create_all()
+    with app.app_context():
+        if not os.path.exists('users.db'):
+            db.create_all()
     app.run(debug=True)
