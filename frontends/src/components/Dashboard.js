@@ -1,13 +1,21 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function Dashboard() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const { data } = await axios.get("http://localhost:5000/api/dashboard");
-      setUser(data);
+      try {
+        const { data } = await axios.get('http://localhost:5000/api/dashboard', {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        setUser(data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
     };
     fetchUserData();
   }, []);

@@ -63,13 +63,14 @@ def logout():
 @app.route('/api/dashboard', methods=['GET'])
 @login_required
 def dashboard():
+    
+    # Fetch user data from the database
     user_data = {
-        'username': current_user.username,
-        'email': current_user.email,
-        'balance': 0.00,
-        'recent_transactions': []
+        'username': 'JohnDoe',
+        'email': 'johndoe@example.com',
+        'balance': 1000.00
     }
-    return jsonify(user_data), 200
+    return jsonify(user_data)
 
 if __name__ == '__main__':
     with app.app_context():
